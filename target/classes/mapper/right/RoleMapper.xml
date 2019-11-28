@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fc.springmvc.modules.right.mapper.RoleMapper">
+
+	<select id="listByAdminId" resultType="com.fc.springmvc.modules.right.vo.RoleVo">
+		select role.*, 
+		(select count(*) from admin_role where adminId=#{adminId} and roleId=role.id) count
+		from role
+	</select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- 数据库连接池配置 -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<property name="driverClassName" value="${mysql.driverClassName}" />
+		<property name="jdbcUrl" value="${mysql.jdbcUrl}" />
+		<property name="username" value="${mysql.username}" />
+		<property name="password" value="${mysql.password}" />
+	</bean>
+
+	<bean id="sqlSessionFactory"
+		class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="globalConfig" ref="globalConfig" />
+		<property name="mapperLocations">
+			<array>
+				<!-- 扫描mybatis的xml文件， 相当于针对我们的mapper接口实现类 -->
+             	<value>classpath:mapper/*/*.xml</value>
+             </array>
+		</property>
+		<property name="plugins">
+			<array>
+				<!-- 性能分析拦截器，用于输出每条 SQL 语句及其执行时间 -->
+				<bean class="com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor"></bean>
+				<!-- 分页插件，这样写分页就不用像纯mybatis那么麻烦了 -->
+				<bean class="com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor"></bean>
+			</array>
+		</property>
+	</bean>
+
+	<bean id="globalConfig" class="com.baomidou.mybatisplus.core.config.GlobalConfig">
+		<property name="dbConfig" ref="dbConfig" />
+	</bean>
+
+	<!-- id类型为uuid -->
+	<bean id="dbConfig" class="com.baomidou.mybatisplus.core.config.GlobalConfig.DbConfig">
+		<property name="idType" value="UUID" />
+	</bean>
+
+	<!-- 使我们的mapper接口能变成spring bean -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.fc.springmvc.modules.*.mapper" />
+	</bean>
+
+</beans>

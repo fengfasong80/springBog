@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fc.springmvc.modules.commerce.mapper.GoodMapper">
+
+	<select id="pageGood" resultType="com.fc.springmvc.modules.commerce.vo.GoodVo">
+		select good.*,good_type.name goodTypeName
+		from good
+		left join good_type
+		on good_type.id=good.goodTypeId
+		<where>
+			<if test="good.name != null and good.name != ''"> and good.name = #{good.name} </if>
+			<if test="good.goodTypeName != null and good.goodTypeName != ''"> and good_type.name = #{good.goodTypeName} </if>
+		</where>
+	</select>
+
+</mapper>
